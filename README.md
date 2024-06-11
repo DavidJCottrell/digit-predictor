@@ -15,3 +15,5 @@ Install Dependencies:
 ## Run Predictions
 
 Open `test_number.png` in paint, draw a number and save, then run `python predict.py`.
+
+![alt text](https://github.com/DavidJCottrell/digit-predictor/blob/main/demo.png)
