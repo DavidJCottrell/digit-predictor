@@ -7,11 +7,8 @@ from tensorflow.keras.models import load_model
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import time
-from datetime import datetime, timedelta
 
 model = load_model('num_reader.keras')
-
-last_file_change_time = datetime.now()
 
 def preprocess_image(image_path):
     img = Image.open(image_path).convert('L') 
@@ -33,13 +30,10 @@ def print_predication(predicted_digit):
     print(f"\nIs it a {predicted_digit}? 😬\n")
 
 class MyHandler(FileSystemEventHandler):
-    def on_modified(self, event):
+    def on_modified(self, _):
         global last_file_change_time
-        # Ignore duplicated events
-        if((datetime.now() - last_file_change_time) >= timedelta(milliseconds=100)):
-            predicted_digit = predict_image(f"{event.src_path}/test_number.png")
-            print_predication(predicted_digit)
-            last_file_change_time = datetime.now()
+        predicted_digit = predict_image(f"./digits/test_number.png")
+        print_predication(predicted_digit)
 
 if __name__ == "__main__":
     event_handler = MyHandler()
