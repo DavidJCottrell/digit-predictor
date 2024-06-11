@@ -1,6 +1,8 @@
 ## Setup
 
-Create and source a virtual environment:
+Open `Git Bash` and clone this repository: `https://github.com/DavidJCottrell/digit-predictor.git`.
+
+Create and source a virtual environment in the repo directory:
 
 `python -m venv ./venv`
 
