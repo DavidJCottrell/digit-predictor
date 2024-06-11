@@ -1,7 +1,3 @@
-# %% [markdown]
-# ### Import Dependencies
-
-# %%
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
@@ -10,20 +6,12 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 from PIL import Image
 
-# %% [markdown]
-# ### Preprocess Training and Testing Data
-
-# %%
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 x_train = x_train.reshape(60000, 28, 28, 1)
 x_test = x_test.reshape(10000, 28, 28, 1)
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
-# %% [markdown]
-# ### Data Augmentation
-
-# %%
 datagen = ImageDataGenerator(
     rotation_range=10,
     width_shift_range=0.1,
@@ -32,10 +20,6 @@ datagen = ImageDataGenerator(
 )
 datagen.fit(x_train)
 
-# %% [markdown]
-# ### Define model architecture
-
-# %%
 model = Sequential([
     Input(shape=(28, 28, 1)),
     Flatten(),
@@ -43,27 +27,13 @@ model = Sequential([
     Dense(10, activation='softmax')
 ])
 
-# %% [markdown]
-# ### Compile and Train Model
-
-# %%
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
 model.fit(datagen.flow(x_train, y_train, batch_size=32), epochs=5, validation_data=(x_test, y_test))
 
-# %% [markdown]
-# ### Evaluate Model on Test Data
-
-# %%
 test_loss, test_acc = model.evaluate(x_test, y_test)
 print(f'Test accuracy: {test_acc}')
 
-# %% [markdown]
-# ### Save the Model
-
-# %%
 model.save('num_reader.keras')
-
-
