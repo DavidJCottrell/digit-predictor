@@ -10,7 +10,7 @@ Create and source a virtual environment in the repo directory:
 
 Install Dependencies:
 
-`pip install PIL tensorflow numpy watchdog`
+`pip install pillow tensorflow numpy watchdog`
 
 ## Run Predictions
 
