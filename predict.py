@@ -1,7 +1,7 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 import numpy as np
 from tensorflow.keras.models import load_model
 from watchdog.observers import Observer
@@ -32,8 +32,11 @@ def print_predication(predicted_digit):
 class MyHandler(FileSystemEventHandler):
     def on_modified(self, _):
         global last_file_change_time
-        predicted_digit = predict_image(f"./digits/test_number.png")
-        print_predication(predicted_digit)
+        try:
+            predicted_digit = predict_image(f"./digits/test_number.png")
+            print_predication(predicted_digit)
+        except UnidentifiedImageError:
+            print("Error")
 
 if __name__ == "__main__":
     event_handler = MyHandler()
