@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 
 model = load_model('num_reader.keras')
 
+last_file_change_time = datetime.now()
+
 def preprocess_image(image_path):
     img = Image.open(image_path).convert('L') 
     img = img.resize((28, 28)) 
@@ -26,17 +28,18 @@ def predict_image(image_path):
     predicted_digit = np.argmax(prediction)
     return predicted_digit
 
-last_file_change_time = datetime.now()
+def print_predication(predicted_digit):
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(f"\nIs it a {predicted_digit}? 😬\n")
 
 class MyHandler(FileSystemEventHandler):
-    def on_modified(self, _):
+    def on_modified(self, event):
         global last_file_change_time
         # Ignore duplicated events
         if((datetime.now() - last_file_change_time) >= timedelta(milliseconds=100)):
+            predicted_digit = predict_image(event.src_path)
+            print_predication(predicted_digit)
             last_file_change_time = datetime.now()
-            predicted_digit = predict_image("./digits/test_number.png")
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print(f"\nIs it a {predicted_digit}? 😬\n")
 
 if __name__ == "__main__":
     event_handler = MyHandler()
