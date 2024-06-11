@@ -7,16 +7,17 @@ from tensorflow.keras.models import load_model
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import time
+import random
 
 model = load_model('num_reader.keras')
 
 def preprocess_image(image_path):
-    img = Image.open(image_path).convert('L') 
-    img = img.resize((28, 28)) 
-    img_array = np.array(img) / 255.0
-    img_array = 1 - img_array
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = np.expand_dims(img_array, axis=-1)
+    img = Image.open(image_path).convert('L') # Convert to grayscale
+    img = img.resize((28, 28)) # Resize to 28x28 (matching MNIST)
+    img_array = np.array(img) / 255.0 # Normalize pixel values
+    img_array = 1 - img_array # Invert colors: MNIST has white digit on black background
+    img_array = np.expand_dims(img_array, axis=0) # Add batch dimension
+    img_array = np.expand_dims(img_array, axis=-1) # Add channel dimension
     return img_array
 
 def predict_image(image_path):
@@ -27,7 +28,18 @@ def predict_image(image_path):
 
 def print_predication(predicted_digit):
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(f"\nIs it a {predicted_digit}? 😬\n")
+
+    choice = random.randrange(1, 6)
+    if(choice == 1):
+        print(f"\nNow that's a nice {predicted_digit}!\n")
+    elif(choice == 2):
+        print(f"\n{predicted_digit}. That is definitely a {predicted_digit}.\n")
+    elif(choice == 3):
+        print(f"\nMotherfuckin {predicted_digit}\n")
+    elif(choice == 4):
+        print(f"\nNow would you look at that {predicted_digit}!\n")
+    elif(choice == 5):
+        print(f"\nI've seen a lot of {predicted_digit}'s, but that is by far the best 👍\n")
 
 class MyHandler(FileSystemEventHandler):
     def on_modified(self, _):
