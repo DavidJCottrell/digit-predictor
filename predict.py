@@ -1,11 +1,13 @@
 import os
-
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 from PIL import Image
 import numpy as np
 from tensorflow.keras.models import load_model
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import time
+from datetime import datetime, timedelta
 
 model = load_model('num_reader.keras')
 
@@ -24,5 +26,27 @@ def predict_image(image_path):
     predicted_digit = np.argmax(prediction)
     return predicted_digit
 
-predicted_digit = predict_image('test_number.png')
-print(f"\nIs it a {predicted_digit}? 😬\n")
+last_file_change_time = datetime.now()
+
+class MyHandler(FileSystemEventHandler):
+    def on_modified(self, _):
+        global last_file_change_time
+        # Ignore duplicated events
+        if((datetime.now() - last_file_change_time) >= timedelta(milliseconds=100)):
+            last_file_change_time = datetime.now()
+            predicted_digit = predict_image("./digits/test_number.png")
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"\nIs it a {predicted_digit}? 😬\n")
+
+if __name__ == "__main__":
+    event_handler = MyHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path='./digits', recursive=False)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
