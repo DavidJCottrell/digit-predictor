@@ -37,7 +37,7 @@ class MyHandler(FileSystemEventHandler):
         global last_file_change_time
         # Ignore duplicated events
         if((datetime.now() - last_file_change_time) >= timedelta(milliseconds=100)):
-            predicted_digit = predict_image(event.src_path)
+            predicted_digit = predict_image(f"{event.src_path}/test_number.png")
             print_predication(predicted_digit)
             last_file_change_time = datetime.now()
 
