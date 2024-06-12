@@ -29,17 +29,15 @@ def predict_image(image_path):
 def print_predication(predicted_digit):
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    choice = random.randrange(1, 6)
+    choice = random.randrange(1, 5)
     if(choice == 1):
         print(f"\nNow that's a nice {predicted_digit}!\n")
     elif(choice == 2):
-        print(f"\n{predicted_digit}. That is definitely a {predicted_digit}.\n")
-    elif(choice == 3):
         print(f"\nMotherfuckin {predicted_digit}\n")
-    elif(choice == 4):
+    elif(choice == 3):
         print(f"\nNow would you look at that {predicted_digit}!\n")
-    elif(choice == 5):
-        print(f"\nI've seen a lot of {predicted_digit}'s, but that is by far the best 👍\n")
+    elif(choice == 4):
+        print(f"\nI've seen a lot of {predicted_digit}'s, but that's the nicest 👍\n")
 
 class MyHandler(FileSystemEventHandler):
     def on_modified(self, _):
