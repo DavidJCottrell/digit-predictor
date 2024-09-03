@@ -3,3 +3,4 @@ tensorflow
 numpy 
 watchdog
 termcolor
+scipy
